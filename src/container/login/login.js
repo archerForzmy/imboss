@@ -3,11 +3,11 @@ import Logo from '../../component/logo/logo'
 import {List, InputItem, WingBlank, WhiteSpace, Button} from 'antd-mobile'
 class Login extends React.Component{
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             user:'',
             pwd:''
-        }
+        };
         //绑定按钮事件
         this.register = this.register.bind(this)
         this.handleLogin = this.handleLogin.bind(this)
