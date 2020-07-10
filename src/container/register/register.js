@@ -13,12 +13,19 @@ class Register extends React.Component {
             repeatpwd: '',
             type: 'genius' // 或者boss
         }
+        //绑定注册事件
         this.handleRegister = this.handleRegister.bind(this)
+    }
+    //输入框事件
+    handleChange(key,val){
+        this.setState({
+            [key]:val
+        })
     }
 
     //执行注册
     handleRegister() {
-
+        console.log(this.state);
     }
 
     render() {
@@ -27,16 +34,16 @@ class Register extends React.Component {
                 <Logo/>
                 <WingBlank>
                     <List>
-                        <InputItem>用户名</InputItem>
+                        <InputItem onChange={v=>this.handleChange('user',v)}>用户名</InputItem>
                         <WhiteSpace/>
-                        <InputItem type='password'>密码</InputItem>
+                        <InputItem type='password' onChange={v=>this.handleChange('pwd',v)}>密码</InputItem>
                         <WhiteSpace/>
-                        <InputItem type='password'>确认密码</InputItem>
+                        <InputItem type='password' onChange={v=>this.handleChange('repeatpwd',v)}>确认密码</InputItem>
                         <WhiteSpace/>
-                        <RadioItem checked={this.state.type == 'genius'}>
+                        <RadioItem checked={this.state.type == 'genius'} onChange={()=>this.handleChange('type','genius')}>
                             牛人
                         </RadioItem>
-                        <RadioItem checked={this.state.type == 'boss'}>
+                        <RadioItem checked={this.state.type == 'boss'} onChange={()=>this.handleChange('type','boss')}>
                             老板
                         </RadioItem>
                         <WhiteSpace/>

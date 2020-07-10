@@ -1,28 +1,10 @@
 const  express = require("express");
-const  mongoose = require("mongoose");
-
-//链接mongodb
-mongoose.connect("mongodb://localhost:27017/imboss");
-mongoose.connection.on('connected',function () {
-   console.log("connection mongodb");
-});
-
-//创建mongdb model
-const user  =mongoose.model('user',new mongoose.Schema({
-    user:{type:String,require:true},
-    age:{type:Number,require:true}
-}));
+const userRouter = require('./user')
 
 //创建app
 const  app = express();
-
-app.get('/',function (req,res) {
-    res.send('<h1>hello server</h1>')
-})
-
-app.get('/data',function (req,res) {
-    res.json({name:"zmy",age:18})
-})
+//添加服务器路由
+app.use('/user',userRouter)
 
 //监听端口
 app.listen("9093",function () {
