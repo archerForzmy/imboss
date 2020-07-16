@@ -4,29 +4,24 @@ import {NavBar} from 'antd-mobile'
 import {Switch, Route} from 'react-router-dom'
 import NavLinkBar from '../navlink/NavLinkBar'
 
+import Boss from '../../component/boss/boss'
+import Genius from '../../component/genius/genius'
+
 function Msg(){
     return <h2>消息列表页面</h2>
 }
 function User(){
     return <h2>个人中心页面</h2>
 }
-function Boss(){
-    return <h2>boss列表页面</h2>
-}
-function Genius(){
-    return <h2>牛人列表页面</h2>
-}
-
-
 @connect(
     state=>state
 )
 class Dashboard extends React.Component{
     render(){
         //获取当前访问的路径
-        const {pathname} = this.props.location
+        const {pathname} = this.props.location;
         //获取是否存在用户信息
-        const user = this.props.user
+        const user = this.props.user;
 
         //主页要路由的数据
         const navList = [
@@ -77,10 +72,6 @@ class Dashboard extends React.Component{
                 <NavLinkBar data={navList}></NavLinkBar>
             </div>
         )
-
-
     }
-
 }
-
 export default Dashboard
