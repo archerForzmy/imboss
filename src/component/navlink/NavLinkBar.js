@@ -2,20 +2,26 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {TabBar} from 'antd-mobile'
 import {withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
+
 @withRouter
+@connect(
+    state=>state.chat,
+)
 class NavLinkBar extends React.Component{
     static propTypes = {
         data: PropTypes.array.isRequired
     }
     render(){
         //过滤要隐藏的组件
-        const navList = this.props.data.filter(v=>!v.hide)
+        const navList = this.props.data.filter(v=>!v.hide);
         //获取route信息
-        const {pathname} = this.props.location
+        const {pathname} = this.props.location;
         return (
-            <TabBar>
+            <TabBar noRenderContent={false}>
                 {navList.map(v=>(
                     <TabBar.Item
+                        badge={v.path==='/msg'?this.props.unread:0}
                         key={v.path}
                         title={v.text}
                         icon={{uri: require(`./img/${v.icon}.png`)}}

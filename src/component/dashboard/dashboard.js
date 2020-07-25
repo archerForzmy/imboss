@@ -6,22 +6,34 @@ import NavLinkBar from '../navlink/NavLinkBar'
 
 import Boss from '../../component/boss/boss'
 import Genius from '../../component/genius/genius'
+import User from '../../component/user/user'
+
+import {getMsgList,sendMsg,recvMsg} from '../../redux/chat.redux';
 
 function Msg(){
     return <h2>消息列表页面</h2>
 }
-function User(){
-    return <h2>个人中心页面</h2>
-}
 @connect(
-    state=>state
+    state=>state,
+    {getMsgList,sendMsg,recvMsg}
 )
 class Dashboard extends React.Component{
+
+    componentDidMount() {
+        //防止充dashboard和chat组件来回切换导致socket接受消息事件重复绑定
+        if(this.props.chat.chatMsg.length) {
+            //获取消息列表
+            this.props.getMsgList();
+            //接受所有消息
+            this.props.recvMsg();
+        }
+    }
     render(){
         //获取当前访问的路径
-        const {pathname} = this.props.location;
+        const pathname = this.props.location.pathname==='/'?('/'+this.props.user.type):this.props.location.pathname;
         //获取是否存在用户信息
         const user = this.props.user;
+
 
         //主页要路由的数据
         const navList = [
@@ -30,16 +42,16 @@ class Dashboard extends React.Component{
                 text:'牛人',
                 icon:'boss',
                 title:'牛人列表',
-                component:Genius,
-                hide:user.type=='genius'
+                component:Boss,
+                hide:user.type==='genius'
             },
             {
                 path:'/genius',
                 text:'boss',
                 icon:'job',
                 title:'BOSS列表',
-                component:Boss,
-                hide:user.type=='boss'
+                component:Genius,
+                hide:user.type==='boss'
             },
             {
                 path:'/msg',
@@ -55,21 +67,21 @@ class Dashboard extends React.Component{
                 title:'个人中心',
                 component:User
             }
-        ]
-
-        const title = navList.find(v=>v.path==pathname).title;
-
+        ];
+        //navList.find(v=>v.path===pathname).title
         return (
             <div>
-                <NavBar className='fixd-header' mode='dard'>{title}</NavBar>
+                <NavBar className='fixd-header' mode='dard'>{pathname}</NavBar>
                 <div style={{marginTop:45}}>
                     <Switch>
                         {navList.map(v=>(
-                            <Route key={v.path} path={v.path} component={v.component}></Route>
+                            <Route key={v.path} path={v.path} component={v.component}/>
                         ))}
                     </Switch>
                 </div>
-                <NavLinkBar data={navList}></NavLinkBar>
+                <div>
+                    <NavLinkBar data={navList}/>
+                </div>
             </div>
         )
     }

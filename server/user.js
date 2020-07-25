@@ -5,7 +5,7 @@ const Router = express.Router();
 //获取模型对象
 const model = require('./model');
 const User = model.getModel('user');
-
+const Chat = model.getModel('chat');
 //完善用户信息
 Router.post('/update',function(req,res){
     //获取cookies中的数据
@@ -53,7 +53,7 @@ Router.post('/login', function(req,res){
         res.cookie('userid', doc._id);
         return res.json({code:0,data:doc})
     })
-})
+});
 
 //获取用户列表
 Router.get('/list',function(req, res){
@@ -87,6 +87,25 @@ Router.post('/register', function(req, res){
             return res.json({code:0,data:{user, type, _id}})
         })
     })
+});
+
+//获取用户消息
+Router.get('/getMsgList', function (req,res) {
+    const user = req.cookies.userid;
+    User.find({}, function (e, userdoc) {
+        //查询所有用户
+        let users = {};
+        userdoc.forEach(v=>{
+            users[v._id] = {name: v.user, avatar:v.avatar}
+        });
+        //查询这个用户发送和接受到的消息
+        Chat.find({'$or':[{from:user},{to:user}]}, function (err, doc) {
+            if(!err) {
+                return res.json({code:0, msgs: doc, users: users})
+            }
+        })
+    })
+
 });
 
 //加密

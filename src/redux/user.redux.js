@@ -4,6 +4,7 @@ import {getRedirectPath} from '../util';
 const AUTH_SUCCESS = 'AUTH_SUCCESS';
 const ERROR_MSG = 'ERROR_MSG';    //操作错误信息
 const LOAD_DATA = 'LOAD_DATA';    //加载数据cookie验证使用
+const LOGOUT = 'LOGOUT';  //退出登录
 //初始化state
 const initState={
     redirectTo:'',
@@ -21,6 +22,8 @@ export function user(state=initState, action){
             return {...state, ...action.payload};
         case ERROR_MSG:
             return {...state, isAuth:false, msg:action.msg};
+        case LOGOUT:
+            return {...initState,redirectTo:'/login'};
         default:
             return state
     }
@@ -40,6 +43,9 @@ export function loadData(userinfo){
     return { type:LOAD_DATA, payload:userinfo}
 }
 
+export function logoutSubmit(){
+    return { type:LOGOUT }
+}
 //组件操作的dicpatch函数
 export function login({user,pwd}){
     if (!user||!pwd) {
@@ -48,7 +54,7 @@ export function login({user,pwd}){
     return dispatch=>{
         axios.post('/user/login',{user,pwd})
             .then(res=>{
-                if (res.status==200&&res.data.code===0) {
+                if (res.status===200&&res.data.code===0) {
                     // dispatch(registerSuccess({user,pwd,type}))
                     dispatch(authSuccess(res.data.data))
                 }else{
@@ -68,7 +74,7 @@ export function regisger({user,pwd,repeatpwd,type}){
     return dispatch=>{
         axios.post('/user/register',{user,pwd,type})
             .then(res=>{
-                if (res.status==200&&res.data.code===0) {
+                if (res.status===200&&res.data.code===0) {
                     dispatch(authSuccess({user,pwd,type}))
                 }else{
                     dispatch(errorMsg(res.data.msg))
@@ -81,7 +87,7 @@ export function update(data){
     return dispatch=>{
         axios.post('/user/update',data)
             .then(res=>{
-                if (res.status==200&&res.data.code===0) {
+                if (res.status===200&&res.data.code===0) {
                     dispatch(authSuccess(res.data.data))
                 }else{
                     dispatch(errorMsg(res.data.msg))
